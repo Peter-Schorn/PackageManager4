@@ -118,8 +118,7 @@
 				47266EEF248BA926004D57DE /* Preview Content */,
 				47266EEC248BA91E004D57DE /* Main.storyboard */,
 			);
-			name = Base.lproj;
-			path = "../../../../Other/Archive/Projects/PackageManagerBackups/PlaygroundPackageManager 6 for copying over/PlaygroundPackageManager/Base.lproj";
+			path = Base.lproj;
 			sourceTree = "<group>";
 		};
 		47266EEF248BA926004D57DE /* Preview Content */ = {

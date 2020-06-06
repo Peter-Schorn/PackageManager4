@@ -78,9 +78,16 @@ struct RootView: View {
     
     var darkMode: Bool { colorScheme == .dark }
 
-    // MARK: Repository Selections
-    // @State var repoSelections: Set<FilterResult> = []
+    // MARK: - Debug -
+    func debug() {
+        
+        print("repo selections:")
+        for repo in globalEnv.repoSelections {
+            print("[\(repo.name ?? "no name")], [\(repo.url)]")
+        }
 
+    }
+    
     
     // MARK: - Body -
     var body: some View {
@@ -91,7 +98,8 @@ struct RootView: View {
             VSplitView {
                 ZStack {
                     List(
-                        self.globalEnv.filteredRepos(),
+                        // self.globalEnv.filterRepos(),
+                        self.globalEnv.globalFilteredRepos,
                         id: \.self, selection: $globalEnv.repoSelections
                     ) { repo in
                         
@@ -125,15 +133,15 @@ struct RootView: View {
                                 self.selectPlaygroundIsShowing
                             )
                             Button(action: {
-                                self.presentSheet(.couldnotConvertToURL)
+                                print("context menu: url:", repo.url)
                                 if let url = URL(string: repo.url) {
                                     NSWorkspace.shared.open(url)
                                 }
                                 else {
-                                    self.couldntConvertURLIsShowing = true
+                                    self.presentSheet(.couldnotConvertToURL)
                                 }
                             }) {
-                                Text("View in Browser")
+                                Text("Open in Browser")
                             }
                             Button(action: {
                                 self.copyToClipboard(repo.url)
@@ -175,16 +183,19 @@ struct RootView: View {
                 .onReceive(deleteSelectedReposPublisher) { _ in
                     self.deleteReposFromList()
                 }
+                .onReceive(debugPublisher) { _ in self.debug() }
                 .onReceive(undoPublisher) { _ in self.pressedUndo() }
                 .onReceive(redoPublisher) { _ in self.pressedRedo() }
                 .onReceive(pastePublisher) { _ in self.pasteFromClipboard() }
                 .onReceive(copyPublisher) { _ in
+                    // self.globalEnv.fixRepoSelections()
                     self.copyToClipboard(
                         self.globalEnv.repoSelections.map { $0.url }
                                 .joined(separator: " ")
                     )
                 }
                 .onReceive(changeRepoNamePublisher) { _ in
+                    // self.globalEnv.fixRepoSelections()
                     if self.globalEnv.repoSelections.count != 1 {
                         return
                     }
@@ -195,10 +206,12 @@ struct RootView: View {
                     
                     
                 }
-                    
+                // MARK: $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+                // MARK: $$$$$$$$$$$$$$$ - List Padding - $$$$$$$$$$$$$$$
+                // MARK: $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
                 .cornerRadius(3)
-                .padding([.leading, .trailing, .top], 10)
-                .padding(.bottom, 5) //
+                .padding([.horizontal, .top], 10)
+                .padding(.bottom, 7)
                 .alert(isPresented: self.$couldntConvertURLIsShowing) {
                     Alert(
                         title: Text("Couldn't convert text to URL"),
@@ -260,12 +273,14 @@ struct RootView: View {
                             .foregroundColor(.secondary)
                             Spacer()
                         }
+                        .background(Color.red)
                     }
                 
                 }
-                .colorMultiply(Color(#colorLiteral(red: 0.5182887248, green: 0.6359114107, blue: 0.6388193965, alpha: 1))).padding(.top)
+                .cornerRadius(3)
                 .padding([.leading, .trailing], 10)
-                // .padding(.bottom, 5)
+                .padding(.top, 7)
+                .frame(minHeight: 200)
                 .contextMenu {
                     Button(action: {
                         removeAllStatusMsgs()
@@ -273,9 +288,8 @@ struct RootView: View {
                         Text("Clear Status Messages")
                     }.disabled(self.globalEnv.statusMessages.isEmpty)
                 }
-                .frame(minHeight: 150)
                 
-            }
+            }  // end VSPlitView
             
             
             // MARK:  - Begin Select Playgrounds and New URL Button -
@@ -324,7 +338,8 @@ struct RootView: View {
                     selectPlaygroundIsShowing
                 )
                 // MARK: Cancel All Repo Cloning
-                if !globalEnv.cancelTaskCallbacks.isEmpty {
+                if !globalEnv.cancelTaskCallbacks.isEmpty
+                    && !self.globalEnv.statusMessages.isEmpty {
                     Button(action: {
                         print("cancelling tasks")
                         self.finishedAddingReposToPlaygrounds()
@@ -332,6 +347,7 @@ struct RootView: View {
                             cancelTask()
                         }
                         self.globalEnv.cancelTaskCallbacks.removeAll()
+                        print("cancelTaskCallbacks.count ==", self.globalEnv.cancelTaskCallbacks.count)
                         
                     }) {
                         Text("Cancel All")

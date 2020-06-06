@@ -30,6 +30,9 @@ struct SearchBar: NSViewRepresentable {
             if let searchBar = obj.object as? NSSearchField {
                 text = searchBar.stringValue
                 globalEnv.searchFieldInFocus = searchBar.hasKeyboardFocus()
+                
+                globalEnv.globalFilteredRepos = globalEnv.filterRepos()
+                globalEnv.fixRepoSelections()
                 // if searchBar.currentEditor() == nil {
                 //     print("search field is out of focus")
                 // }

@@ -33,12 +33,32 @@ extension Notification.Name {
 // MARK: Global Environment
 class GlobalEnv: ObservableObject {
     
+    init() {
+        self.globalFilteredRepos = saved_repos.map { repo in
+            FilterResult(
+                url: repo.url,
+                name: repo.name,
+                attributeRanges: []
+            )
+        }
+    }
+    
+    func fixRepoSelections() {
+        print("fixing repo selections")
+        globalEnv.repoSelections = globalEnv.repoSelections.filter { repo in
+            if !globalEnv.globalFilteredRepos.contains(repo) {
+                print("fixRepoSelections: removing\n" + repo.url)
+                return false
+            }
+            return true
+            
+        }
+    }
+    
+    
+    
     @Published var searchText = ""
 
-    @Published var saved_repos = getReposFromFile()
-    
-    @Published var repoSelections: Set<FilterResult> = []
-    
     @Published var userSettings = UserDefaults.standard
     
     @Published var tempDirectories: [URL] = []
@@ -49,7 +69,14 @@ class GlobalEnv: ObservableObject {
     
     @Published var searchFieldInFocus = false
     
-    // func filteredRepos() -> [String]
+    @Published var saved_repos = getReposFromFile()
+    
+    @Published var repoSelections: Set<FilterResult> = []
+    
+    @Published var globalFilteredRepos: [FilterResult] = []
+    
+    // FilteredRepositories.swift
+    // func filterRepos() -> [String]
     
 }
 let globalEnv = GlobalEnv()

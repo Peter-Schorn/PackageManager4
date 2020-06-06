@@ -18,6 +18,8 @@ extension RootView {
     /// repositories are deleted.
     func deleteReposFromList(_ specificRepo: String? = nil) {
         
+        // self.globalEnv.fixRepoSelections()
+        
         let currentRepos = self.globalEnv.saved_repos
         
         undoStack.addUndoAction {
@@ -164,6 +166,8 @@ extension RootView {
     
     
     func selectPlaygroundsButtonAction() {
+        
+        // self.globalEnv.fixRepoSelections()
         
         if globalEnv.repoSelections.isEmpty { return }
         

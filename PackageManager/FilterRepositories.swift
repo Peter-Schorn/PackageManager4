@@ -28,7 +28,7 @@ struct FilterResult: Hashable, Equatable {
 
 extension GlobalEnv {
     
-    func filteredRepos() -> [FilterResult] {
+    func filterRepos() -> [FilterResult] {
         let search = searchText.strip()
         
         // exit early if the search or saved repos are empty
@@ -95,11 +95,11 @@ extension GlobalEnv {
             }
                     
             if rating == 0 { continue }
-            let strRating = " (\(rating.format(.stripTrailingZeros)))"
+            // let strRating = " (\(rating.format(.stripTrailingZeros)))"
 
             ratedResults.append((
                 FilterResult(
-                    url: repo.url + strRating,
+                    url: repo.url,
                     name: repo.name,
                     attributeRanges: attributeRanges
                 ),

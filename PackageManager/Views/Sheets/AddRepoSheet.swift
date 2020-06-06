@@ -30,11 +30,11 @@ struct AddRepoSheet: View {
     
     let dismissCallback: () -> Void
     
-    func pastFromClipboard() {
+    func pasteFromClipboard() {
        
         print("pastFromClipboard")
         
-        guard let pastedText = NSPasteboard.general.string(forType: .string) else {
+        guard let pastedText = pasteboardString()?.strip() else {
             print("couldn't get text from clipboard")
             return
         }
@@ -62,6 +62,8 @@ struct AddRepoSheet: View {
     func doneEnteringText() {
         
         print("doneEnteringText")
+        
+        self.newURL.stripInPlace()
         
         if !self.newURL.hasPrefix("https://") {
             self.newURL = "https://" + self.newURL
@@ -96,26 +98,26 @@ struct AddRepoSheet: View {
                     .font(.caption)
                     .frame(width: 35)
                 TextField("", text: $newURL)
-                    .onExitCommand(perform: doneEnteringText)
                     .focusable(true) { inFocus in
                         print("newURL field in focus:", inFocus)
                         if inFocus {
                             self.currenTextField = .newURL
                         }
-                    }
+                }
+                    .onExitCommand(perform: doneEnteringText)
             }
             HStack {
                 Text("Name")
                     .font(.caption)
                     .frame(width: 35)
                 TextField("", text: $newName)
-                    .onExitCommand(perform: doneEnteringText)
                     .focusable(true) { inFocus in
                         print("newName field in focus:", inFocus)
                         if inFocus {
                             self.currenTextField = .newName
                         }
                     }
+                    .onExitCommand(perform: doneEnteringText)
             }
             
             HStack {
@@ -137,7 +139,7 @@ struct AddRepoSheet: View {
                 
             }
             .onReceive(self.pastePublisher) { _ in
-                self.pastFromClipboard()
+                self.pasteFromClipboard()
             }
             
         }

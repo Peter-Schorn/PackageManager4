@@ -88,10 +88,21 @@ struct RootView: View {
     // MARK: - Debug -
     func debug() {
         
-        print("repo selections:")
+        print("\n----------------\nrepo selections:")
         for repo in globalEnv.repoSelections {
-            print("[\(repo.name ?? "no name")], [\(repo.url)]")
+            print("\t[\(repo.name ?? "no name")], [\(repo.url)]")
         }
+        
+        print("\nglobalEnv.saved_repos:")
+        for repo in globalEnv.saved_repos {
+            print("\t[\(repo.url)]")
+        }
+        
+        print("\nglobalEnv.filterRepos:")
+        for repo in globalEnv.globalFilteredRepos {
+            print("\t[\(repo.url)]")
+        }
+        
 
     }
     
@@ -125,7 +136,6 @@ struct RootView: View {
             VSplitView {
                 ZStack {
                     List(
-                        // self.globalEnv.filterRepos(),
                         self.globalEnv.globalFilteredRepos,
                         id: \.self, selection: $globalEnv.repoSelections
                     ) { repo in
@@ -214,14 +224,12 @@ struct RootView: View {
                 .onReceive(redoPublisher) { _ in self.pressedRedo() }
                 .onReceive(pastePublisher) { _ in self.pasteFromClipboard() }
                 .onReceive(copyPublisher) { _ in
-                    // self.globalEnv.fixRepoSelections()
                     self.copyToClipboard(
                         self.globalEnv.repoSelections.map { $0.url }
                                 .joined(separator: " ")
                     )
                 }
                 .onReceive(changeRepoNamePublisher) { _ in
-                    // self.globalEnv.fixRepoSelections()
                     if self.globalEnv.repoSelections.count != 1 {
                         return
                     }
@@ -263,6 +271,7 @@ struct RootView: View {
                             
                             self.undoStack.addUndoAction {
                                 self.globalEnv.saved_repos = currentRepos
+                                self.globalEnv.updateRepos()
                                 saveReposToFile(self.globalEnv.saved_repos)
                             }
                             
@@ -272,6 +281,7 @@ struct RootView: View {
                             if let repo = self.rightClickedRepo {
                                 changeRepo(.name(name), id: repo.id)
                             }
+                            self.globalEnv.updateRepos()
                         }
                     )
                     .environmentObject(self.globalEnv)

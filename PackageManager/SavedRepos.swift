@@ -47,7 +47,6 @@ enum ChangeRepoOptions {
 
 func changeRepo(_ option: ChangeRepoOptions, id: UUID) {
     
-    print("func changeRepo \(option)")
     
     DispatchQueue.main.async {
         
@@ -65,9 +64,11 @@ func changeRepo(_ option: ChangeRepoOptions, id: UUID) {
             case .sourcesDir(let dir):
                 print("changing repo sources dir to", dir)
                 globalEnv.saved_repos[indx].sourcesDir = dir
+        
+                print("func changeRepo \(option)")
+                saveReposToFile(globalEnv.saved_repos)
         }
         
-        saveReposToFile(globalEnv.saved_repos)
         
     }
 }

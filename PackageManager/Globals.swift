@@ -46,9 +46,12 @@ class GlobalEnv: ObservableObject {
         }
     }
     
-    /// remove repo selections that are not actually on screen because
-    /// the user started searching
-    func fixRepoSelections() {
+    /// Remove repo selections that are not actually on screen because
+    /// the user started searching. Also ensure that the filtered repos are
+    /// up to date based on the search field text.
+    func updateRepos() {
+        self.globalFilteredRepos = self.filterRepos()
+        
         globalEnv.repoSelections = globalEnv.repoSelections.filter { repo in
             if !globalEnv.globalFilteredRepos.contains(repo) {
                 print("fixRepoSelections: removing\n" + repo.url)
@@ -57,10 +60,6 @@ class GlobalEnv: ObservableObject {
             return true
             
         }
-    }
-    
-    func updateRepos() {
-        self.globalFilteredRepos = self.filterRepos()
     }
     
     

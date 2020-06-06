@@ -18,11 +18,16 @@ extension RootView {
     /// repositories are deleted.
     func deleteReposFromList(_ specificRepo: String? = nil) {
         
+        print("deleteReposFromList: repoSelections:")
+        for repo in globalEnv.repoSelections {
+            print(repo.url)
+        }
         
         let currentRepos = self.globalEnv.saved_repos
         
         undoStack.addUndoAction {
             self.globalEnv.saved_repos = currentRepos
+            self.globalEnv.updateRepos()
             saveReposToFile(self.globalEnv.saved_repos)
         }
             
@@ -42,7 +47,6 @@ extension RootView {
         })
         
         self.globalEnv.updateRepos()
-        self.globalEnv.fixRepoSelections()
         
         saveReposToFile(self.globalEnv.saved_repos)
         
@@ -70,21 +74,32 @@ extension RootView {
     }
     
     func pressedUndo() {
+        
+        print("func pressed undo")
+        
         let currentRepos = self.globalEnv.saved_repos
+        
         self.undoStack.undo {
             self.globalEnv.saved_repos = currentRepos
+            self.globalEnv.updateRepos()
             saveReposToFile(self.globalEnv.saved_repos)
         }
-        saveReposToFile(self.globalEnv.saved_repos)
+        print("after calling self.undoStack.undo")
+        // saveReposToFile(self.globalEnv.saved_repos)
     }
     
     func pressedRedo() {
+        
+        print("func pressedRedo")
+        
         let currentRepos = self.globalEnv.saved_repos
         self.undoStack.redo {
             self.globalEnv.saved_repos = currentRepos
+            self.globalEnv.updateRepos()
             saveReposToFile(self.globalEnv.saved_repos)
         }
-        saveReposToFile(self.globalEnv.saved_repos)
+        print("after calling self.undoStack.redo")
+        // saveReposToFile(self.globalEnv.saved_repos)
     }
     
     func copyToClipboard(_ text: String) {
@@ -108,13 +123,14 @@ extension RootView {
         
         undoStack.addUndoAction {
             self.globalEnv.saved_repos = currentRepos
+            self.globalEnv.updateRepos()
             saveReposToFile(self.globalEnv.saved_repos)
         }
         
         
         print("should paste from clipboard")
         
-        guard var pastedText = NSPasteboard.general.string(forType: .string) else {
+        guard var pastedText = pasteboardString()?.strip() else {
             print("couldn't get text from clipboard")
             return
         }
@@ -132,8 +148,8 @@ extension RootView {
         }
         else {
             self.globalEnv.saved_repos.append(SavedRepository(url: pastedText))
-            saveReposToFile(self.globalEnv.saved_repos)
             globalEnv.updateRepos()
+            saveReposToFile(self.globalEnv.saved_repos)
         }
         
         
@@ -187,7 +203,6 @@ extension RootView {
     
     func selectPlaygroundsButtonAction() {
         
-        // self.globalEnv.fixRepoSelections()
         
         if globalEnv.repoSelections.isEmpty { return }
         

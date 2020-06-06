@@ -19,8 +19,10 @@ class UndoRedoManager {
         self.undoStack.append(action)
     }
     
+    /// Performs the last registered undo action
+    /// and accepts a redo action
     func undo(_ redoAction: @escaping () -> Void) {
-        
+        print("undo")
         self.redoStack.append(redoAction)
         
         if !self.undoStack.isEmpty {
@@ -28,8 +30,10 @@ class UndoRedoManager {
         }
     }
     
+    /// Performs the last registered redo action
+    /// and accepts an undo action
     func redo(_ undoAction: @escaping () -> Void) {
-        
+        print("redo")
         self.undoStack.append(undoAction)
         
         if !self.redoStack.isEmpty {

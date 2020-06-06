@@ -30,9 +30,15 @@ struct RootView: View {
     let changeRepoNamePublisher = NotificationCenter.default.publisher(
         for: .changeRepoName
     )
+    let addNewRepoPublisher = NotificationCenter.default.publisher(for: .addRepo)
+    let selectPlaygroundsPublisher = NotificationCenter.default.publisher(
+        for: .selectPlaygrounds
+    )
+    
     let debugPublisher = NotificationCenter.default.publisher(
         for: .debug
     )
+    
     
     // MARK: Environment
     @EnvironmentObject var globalEnv: GlobalEnv
@@ -86,6 +92,26 @@ struct RootView: View {
             print("[\(repo.name ?? "no name")], [\(repo.url)]")
         }
 
+    }
+    
+    func canAddPlaygrounds() -> Bool {
+        if self.globalEnv.saved_repos.isEmpty ||
+                globalEnv.repoSelections.isEmpty ||
+                sheetIsPresented ||
+            selectPlaygroundIsShowing
+        {
+            return false
+        }
+        return true
+    }
+    
+    func canAddNewRepo() -> Bool {
+        if sheetIsPresented ||
+            selectPlaygroundIsShowing
+        {
+            return false
+        }
+        return true
     }
     
     
@@ -159,6 +185,9 @@ struct RootView: View {
 
                     }  // end list body
                     .onDeleteCommand { self.deleteReposFromList() }
+                    .onReceive(deleteSelectedReposPublisher) { _ in
+                        self.deleteReposFromList()
+                    }
                     if self.globalEnv.saved_repos.isEmpty {
                         Text(
                             """
@@ -179,9 +208,6 @@ struct RootView: View {
                         .padding()
                     }
                 }  // end ZStack
-                .onReceive(deleteSelectedReposPublisher) { _ in
-                    self.deleteReposFromList()
-                }
                 .onReceive(debugPublisher) { _ in self.debug() }
                 .onReceive(undoPublisher) { _ in self.pressedUndo() }
                 .onReceive(redoPublisher) { _ in self.pressedRedo() }
@@ -310,12 +336,12 @@ struct RootView: View {
                 Button(action: selectPlaygroundsButtonAction) {
                     Text("Select Playgrounds")
                 }
-                .disabled(
-                    self.globalEnv.saved_repos.isEmpty ||
-                    globalEnv.repoSelections.isEmpty ||
-                    sheetIsPresented ||
-                    selectPlaygroundIsShowing
-                )
+                .disabled(!self.canAddPlaygrounds())
+                .onReceive(selectPlaygroundsPublisher) { _ in
+                    if self.canAddPlaygrounds() {
+                        self.selectPlaygroundsButtonAction()
+                    }
+                }
                 // MARK: Error Alert From didChoosePlaygrounds
                 .alert(isPresented: self.$showingErrorAlert) {
                     Alert(
@@ -330,10 +356,12 @@ struct RootView: View {
                 }) {
                     Text("Add Repository")
                 }
-                .disabled(
-                    sheetIsPresented ||
-                    selectPlaygroundIsShowing
-                )
+                .disabled(!self.canAddNewRepo())
+                .onReceive(addNewRepoPublisher) { _ in
+                    if self.canAddNewRepo() {
+                        self.presentSheet(.addNewURL)
+                    }
+                }
                 // MARK: Cancel All Repo Cloning
                 if !globalEnv.cancelTaskCallbacks.isEmpty
                     && !self.globalEnv.statusMessages.isEmpty {
@@ -414,36 +442,6 @@ struct RootView: View {
 }
 
 
-
-public struct TextStyle {
-    
-    // This type is opaque because it exposes NSAttributedString details and
-    // requires unique keys. It can be extended by public static methods.
-
-    // Properties are internal to be accessed by StyledText
-    internal let key: NSAttributedString.Key
-    internal let apply: (Text) -> Text
-
-    public init(key: NSAttributedString.Key, apply: @escaping (Text) -> Text) {
-        self.key = key
-        self.apply = apply
-    }
-
-    
-    static func foregroundColor(_ color: Color) -> Self {
-        return TextStyle(
-            key: .init("TextStyleForegroundColor"),
-            apply: { $0.foregroundColor(color) }
-        )
-    }
-
-    static func bold() -> Self {
-        return TextStyle(
-            key: .init("TextStyleBold"), apply: { $0.bold() }
-        )
-    }
-    
-}
 
 
 

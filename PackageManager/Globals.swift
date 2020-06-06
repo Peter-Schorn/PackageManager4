@@ -25,6 +25,9 @@ extension Notification.Name {
     static let deleteSelectedRepos = Notification.Name("deleteSelectedRepos")
     static let changeRepoName = Notification.Name("changeRepoName")
     static let openInBrowser = Notification.Name("openInBrowser")
+    static let addRepo = Notification.Name("addRepo")
+    static let selectPlaygrounds = Notification.Name("selectPlaygrounds")
+    
     static let debug = Notification.Name("debug")
 }
 

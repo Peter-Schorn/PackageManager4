@@ -29,7 +29,7 @@ struct SearchBar: NSViewRepresentable {
             // print("controlTextDid CHANGE")
             if let searchBar = obj.object as? NSSearchField {
                 text = searchBar.stringValue
-                globalEnv.searchFieldInFocus = searchBar.hasKeyboardFocus()
+                // globalEnv.searchFieldInFocus = searchBar.hasKeyboardFocus()
                 
                 globalEnv.updateRepos()
                 globalEnv.fixRepoSelections()

@@ -28,6 +28,7 @@
 		47266F17248BA94F004D57DE /* StatusMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47266F12248BA94E004D57DE /* StatusMessages.swift */; };
 		47266F18248BA94F004D57DE /* UndoRedoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47266F13248BA94F004D57DE /* UndoRedoManager.swift */; };
 		47266F1B248BA98B004D57DE /* Utilities in Frameworks */ = {isa = PBXBuildFile; productRef = 47266F1A248BA98B004D57DE /* Utilities */; };
+		47D2ADAE248BD10100CF0DF7 /* KeyCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47D2ADAD248BD10100CF0DF7 /* KeyCommands.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +56,7 @@
 		47266F11248BA94E004D57DE /* RootViewFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewFunctions.swift; sourceTree = "<group>"; };
 		47266F12248BA94E004D57DE /* StatusMessages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusMessages.swift; sourceTree = "<group>"; };
 		47266F13248BA94F004D57DE /* UndoRedoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UndoRedoManager.swift; sourceTree = "<group>"; };
+		47D2ADAD248BD10100CF0DF7 /* KeyCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCommands.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +91,7 @@
 			isa = PBXGroup;
 			children = (
 				47266F09248BA944004D57DE /* AppDelegate.swift */,
+				47D2ADAD248BD10100CF0DF7 /* KeyCommands.swift */,
 				47266F05248BA944004D57DE /* DidChoosePlaygrounds.swift */,
 				47266F06248BA944004D57DE /* FilterRepositories.swift */,
 				47266F07248BA944004D57DE /* Globals.swift */,
@@ -251,6 +254,7 @@
 				47266EFF248BA93C004D57DE /* Tooltip.swift in Sources */,
 				47266F0B248BA944004D57DE /* FilterRepositories.swift in Sources */,
 				47266F02248BA93C004D57DE /* RootView.swift in Sources */,
+				47D2ADAE248BD10100CF0DF7 /* KeyCommands.swift in Sources */,
 				47266F03248BA93C004D57DE /* SearchBar.swift in Sources */,
 				47266F04248BA93C004D57DE /* TitlebarView.swift in Sources */,
 				47266F16248BA94F004D57DE /* RootViewFunctions.swift in Sources */,

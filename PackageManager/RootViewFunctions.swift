@@ -18,7 +18,6 @@ extension RootView {
     /// repositories are deleted.
     func deleteReposFromList(_ specificRepo: String? = nil) {
         
-        // self.globalEnv.fixRepoSelections()
         
         let currentRepos = self.globalEnv.saved_repos
         
@@ -33,12 +32,22 @@ extension RootView {
                 return repo.url == specificRepo
             }
             else {
-                return globalEnv.repoSelections.map { $0.url }.contains(repo.url)
+                if globalEnv.repoSelections.map({ $0.url }).contains(repo.url) {
+                    print("removing:", repo.url)
+                    return true
+                }
+                print("not removing:", repo.url)
+                return false
             }
         })
         
+        self.globalEnv.updateRepos()
+        self.globalEnv.fixRepoSelections()
+        
         saveReposToFile(self.globalEnv.saved_repos)
-        globalEnv.updateRepos()
+        
+        
+        
 
     }
     

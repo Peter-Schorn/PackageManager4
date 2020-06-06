@@ -59,6 +59,37 @@ public struct StyledText {
 }
 
 
+
+public struct TextStyle {
+    
+    // This type is opaque because it exposes NSAttributedString details and
+    // requires unique keys. It can be extended by public static methods.
+
+    // Properties are internal to be accessed by StyledText
+    internal let key: NSAttributedString.Key
+    internal let apply: (Text) -> Text
+
+    public init(key: NSAttributedString.Key, apply: @escaping (Text) -> Text) {
+        self.key = key
+        self.apply = apply
+    }
+
+    
+    static func foregroundColor(_ color: Color) -> Self {
+        return TextStyle(
+            key: .init("TextStyleForegroundColor"),
+            apply: { $0.foregroundColor(color) }
+        )
+    }
+
+    static func bold() -> Self {
+        return TextStyle(
+            key: .init("TextStyleBold"), apply: { $0.bold() }
+        )
+    }
+    
+}
+
 extension StyledText: View {
     
     public var body: some View { text() }

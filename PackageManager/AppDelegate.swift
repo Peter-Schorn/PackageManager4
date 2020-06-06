@@ -71,6 +71,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     
+    @IBAction func menuBarSelectPlaygrounds(_ sender: Any) {
+        NotificationCenter.default.post(name: .selectPlaygrounds, object: nil)
+    }
+    
+    @IBAction func menuBarAddRepo(_ sender: Any) {
+        NotificationCenter.default.post(name: .addRepo, object: nil)
+    }
+    
+    
     var window: NSWindow!
 
     func applicationDidFinishLaunching(_ Notification: Notification) {

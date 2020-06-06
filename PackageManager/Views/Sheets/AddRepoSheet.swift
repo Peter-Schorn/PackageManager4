@@ -32,6 +32,8 @@ struct AddURLSheet: View {
     
     func pastFromClipboard() {
        
+        print("pastFromClipboard")
+        
         guard let pastedText = NSPasteboard.general.string(forType: .string) else {
             print("couldn't get text from clipboard")
             return
@@ -41,9 +43,11 @@ struct AddURLSheet: View {
         
         switch currenTextField {
             case .newURL:
+                print("case .newURL")
                 if URL(string: pastedText) == nil { return }
                 newURL = pastedText
             case .newName:
+                print("case .newName")
                 newName = pastedText
             case .none:
                 print("no text field selected")
@@ -89,7 +93,9 @@ struct AddURLSheet: View {
                     .font(.caption)
                     .frame(width: 35)
                 TextField("", text: $newURL)
+                    .onExitCommand(perform: doneEnteringText)
                     .focusable(true) { inFocus in
+                        print("newURL field in focus:", inFocus)
                         if inFocus {
                             self.currenTextField = .newURL
                         }
@@ -100,12 +106,15 @@ struct AddURLSheet: View {
                     .font(.caption)
                     .frame(width: 35)
                 TextField("", text: $newName)
+                    .onExitCommand(perform: doneEnteringText)
                     .focusable(true) { inFocus in
+                        print("newName field in focus:", inFocus)
                         if inFocus {
                             self.currenTextField = .newName
                         }
                     }
             }
+            
             HStack {
                 Spacer()
                 Button(action: {
@@ -114,11 +123,13 @@ struct AddURLSheet: View {
                 }) {
                     Text("Cancel")
                 }
+                .onExitCommand(perform: doneEnteringText)
                 
                 DefaultButton(
                     "Add", keyEquivalent: .return,
                     action: doneEnteringText
                 )
+                .onExitCommand(perform: doneEnteringText)
                 .disabled(self.newURL.isEmpty)
                 
             }
@@ -127,6 +138,7 @@ struct AddURLSheet: View {
             }
             
         }
+        .onExitCommand(perform: doneEnteringText)
         .padding([.leading, .trailing])
         .frame(width: 420, height: 140)
         

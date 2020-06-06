@@ -67,9 +67,11 @@ struct GeneralSheet: View {
                 link: URL(string: self.url),
                 displayText: Text(self.url).font(.caption)
             )
+            .onExitCommand(perform: selectedDone)
             .lineLimit(3)
             
             TextField(textFieldHint, text: $textField)
+                .onExitCommand(perform: selectedDone)
                 .onReceive(self.pastePublisher) { _ in
                     self.pasteFromClipboard()
                 }
@@ -82,12 +84,14 @@ struct GeneralSheet: View {
                 }) {
                     Text("Cancel")
                 }
+                .onExitCommand(perform: selectedDone)
                 // MARK: Right Button
                 DefaultButton(
                     rightButtonText, keyEquivalent: .return,
                     action: selectedDone
                 )
                 .disabled(textField.isEmpty)
+                .onExitCommand(perform: selectedDone)
                 
             }
             

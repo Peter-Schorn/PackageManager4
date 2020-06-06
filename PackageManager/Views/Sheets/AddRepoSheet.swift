@@ -11,7 +11,7 @@ import AppKit
 import Utilities
 
 
-struct AddURLSheet: View {
+struct AddRepoSheet: View {
     
     let pastePublisher = NotificationCenter.default.publisher(for: .paste)
     
@@ -44,7 +44,10 @@ struct AddURLSheet: View {
         switch currenTextField {
             case .newURL:
                 print("case .newURL")
-                if URL(string: pastedText) == nil { return }
+                if URL(string: pastedText) == nil {
+                    print("AddURLSheet: returning because pasted text is not url")
+                    return
+                }
                 newURL = pastedText
             case .newName:
                 print("case .newName")
@@ -157,7 +160,7 @@ struct AddURLSheet: View {
 
 struct AddURLSheet_Previews: PreviewProvider {
     static var previews: some View {
-        AddURLSheet(
+        AddRepoSheet(
             isPresented: .constant(true),
             dismissCallback: { print("dismissed ")}
         )

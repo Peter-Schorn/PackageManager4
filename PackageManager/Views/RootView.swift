@@ -62,6 +62,7 @@ struct RootView: View {
     
     
     @State var changeRepoNameIsShowing = false
+    @State var changeRepoNameURL = ""
     @State var changeRepoNameField = ""
 
     @State var couldntConvertURLIsShowing = false
@@ -249,6 +250,7 @@ struct RootView: View {
                     GeneralSheet(
                         isPresented: self.$changeRepoNameIsShowing,
                         title: .constant("Enter The Name of the Repository"),
+                        url: .constant(self.rightClickedRepo?.url ?? ""),
                         textField: self.$changeRepoNameField,
                         rightButtonText: "Done",
                         selectedCancel: {
@@ -256,6 +258,14 @@ struct RootView: View {
                             self.dissmissSheet(.changeRepoName)
                         },
                         selectedDone: {
+
+                            let currentRepos = self.globalEnv.saved_repos
+                            
+                            self.undoStack.addUndoAction {
+                                self.globalEnv.saved_repos = currentRepos
+                                saveReposToFile(self.globalEnv.saved_repos)
+                            }
+                            
                             let name = self.changeRepoNameField
                             self.changeRepoNameField = ""
                             self.dissmissSheet(.changeRepoName)
@@ -323,7 +333,7 @@ struct RootView: View {
             }
             // MARK: - Add URL Sheet
             .sheet(isPresented: self.$addURLSheetIsPresented) {
-                AddURLSheet(
+                AddRepoSheet(
                     isPresented: self.$addURLSheetIsPresented,
                     dismissCallback: { self.dissmissSheet(.addNewURL) }
                 )
@@ -401,14 +411,6 @@ struct RootView: View {
                     },
                     selectedDone: {
                         // MARK: User pressed done; send name to handler
-                        print(
-                            """
-                            ------------------------------------------
-                            User pressed done for get repo name sheet;
-                            Name: \(self.getrepoNameField)
-                            ------------------------------------------
-                            """
-                        )
                         if self.gotTextHandler == nil {
                             print(
                                 """

@@ -104,6 +104,12 @@ extension RootView {
             return
         }
         
+        let currentRepos = self.globalEnv.saved_repos
+        
+        undoStack.addUndoAction {
+            self.globalEnv.saved_repos = currentRepos
+            saveReposToFile(self.globalEnv.saved_repos)
+        }
         
         
         print("should paste from clipboard")
@@ -127,9 +133,10 @@ extension RootView {
         else {
             self.globalEnv.saved_repos.append(SavedRepository(url: pastedText))
             saveReposToFile(self.globalEnv.saved_repos)
+            globalEnv.updateRepos()
         }
         
-        globalEnv.updateRepos()
+        
         
     }
     

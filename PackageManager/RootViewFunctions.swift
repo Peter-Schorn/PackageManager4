@@ -38,6 +38,7 @@ extension RootView {
         })
         
         saveReposToFile(self.globalEnv.saved_repos)
+        globalEnv.updateRepos()
 
     }
     
@@ -94,6 +95,8 @@ extension RootView {
             return
         }
         
+        
+        
         print("should paste from clipboard")
         
         guard var pastedText = NSPasteboard.general.string(forType: .string) else {
@@ -117,6 +120,7 @@ extension RootView {
             saveReposToFile(self.globalEnv.saved_repos)
         }
         
+        globalEnv.updateRepos()
         
     }
     
@@ -322,6 +326,7 @@ extension RootView {
         DispatchQueue.main.async {
         
             print("func dissmissSheet")
+            self.globalEnv.updateRepos()
 
             switch sheet {
                 case .addNewURL:

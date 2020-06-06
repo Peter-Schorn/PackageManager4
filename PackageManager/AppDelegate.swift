@@ -80,13 +80,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let rootView = RootView()
             .environmentObject(globalEnv)
             .frame(
-                minWidth: 500,
-                idealWidth: 600,
-                maxWidth: .infinity,
-                // minHeight: 400,
-                minHeight: 500,
-                idealHeight: 500,
-                maxHeight: .infinity
+                minWidth: 500,  idealWidth: 600,  maxWidth: .infinity,
+                minHeight: 500, idealHeight: 600, maxHeight: .infinity
             )
             
         

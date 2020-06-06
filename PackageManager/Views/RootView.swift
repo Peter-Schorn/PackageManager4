@@ -179,7 +179,6 @@ struct RootView: View {
                         .padding()
                     }
                 }  // end ZStack
-                .frame(minHeight: 175, idealHeight: 200)
                 .onReceive(deleteSelectedReposPublisher) { _ in
                     self.deleteReposFromList()
                 }
@@ -212,6 +211,7 @@ struct RootView: View {
                 .cornerRadius(3)
                 .padding([.horizontal, .top], 10)
                 .padding(.bottom, 7)
+                .frame(minHeight: 175, idealHeight: 200)
                 .alert(isPresented: self.$couldntConvertURLIsShowing) {
                     Alert(
                         title: Text("Couldn't convert text to URL"),
@@ -244,7 +244,6 @@ struct RootView: View {
             
                     
             // MARK: - Status Messages -
-            
                 List(self.globalEnv.statusMessages, id: \.id) { msg in
                     GeometryReader { geo in
                         HStack {
@@ -273,14 +272,14 @@ struct RootView: View {
                             .foregroundColor(.secondary)
                             Spacer()
                         }
-                        .background(Color.red)
                     }
-                
+                    .listRowBackground(Color(#colorLiteral(red: 0.5196475387, green: 0.635319531, blue: 0.6407587528, alpha: 1)))
                 }
+                
                 .cornerRadius(3)
                 .padding([.leading, .trailing], 10)
                 .padding(.top, 7)
-                .frame(minHeight: 200)
+                .frame(minHeight: 150)
                 .contextMenu {
                     Button(action: {
                         removeAllStatusMsgs()
@@ -292,8 +291,6 @@ struct RootView: View {
             }  // end VSPlitView
             
             
-            // MARK:  - Begin Select Playgrounds and New URL Button -
-                    
             .onReceive(clearStatusMsgsPublisher) { _ in
                 removeAllStatusMsgs()
                 print("menu bar clear status messages")

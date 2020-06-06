@@ -43,8 +43,9 @@ class GlobalEnv: ObservableObject {
         }
     }
     
+    /// remove repo selections that are not actually on screen because
+    /// the user started searching
     func fixRepoSelections() {
-        print("fixing repo selections")
         globalEnv.repoSelections = globalEnv.repoSelections.filter { repo in
             if !globalEnv.globalFilteredRepos.contains(repo) {
                 print("fixRepoSelections: removing\n" + repo.url)
@@ -55,6 +56,9 @@ class GlobalEnv: ObservableObject {
         }
     }
     
+    func updateRepos() {
+        self.globalFilteredRepos = self.filterRepos()
+    }
     
     
     @Published var searchText = ""

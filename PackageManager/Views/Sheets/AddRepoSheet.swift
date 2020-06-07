@@ -32,7 +32,12 @@ struct AddRepoSheet: View {
     
     func pasteFromClipboard() {
        
-        print("pastFromClipboard")
+        if !isPresented {
+            print("AddRepoSheet: tried to paste but not showing")
+            return
+        }
+        
+        print("AddRepoSheet: pastFromClipboard")
         
         guard let pastedText = pasteboardString()?.strip() else {
             print("couldn't get text from clipboard")

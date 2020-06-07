@@ -128,7 +128,7 @@ extension RootView {
         }
         
         
-        print("should paste from clipboard")
+        print("root view functions paste from clipboard")
         
         guard var pastedText = pasteboardString()?.strip() else {
             print("couldn't get text from clipboard")
@@ -161,7 +161,7 @@ extension RootView {
         let currentMsgIds = self.globalEnv.statusMessages.map { $0.id }
         
         // Remove all of the current status messages after 5 seconds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
             self.globalEnv.statusMessages.removeAll { msg in
                 currentMsgIds.contains(msg.id)
             }

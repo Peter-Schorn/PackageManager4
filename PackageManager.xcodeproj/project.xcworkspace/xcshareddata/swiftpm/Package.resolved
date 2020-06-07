@@ -1,0 +1,25 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "RegularExpressions",
+        "repositoryURL": "https://github.com/Peter-Schorn/RegularExpressions",
+        "state": {
+          "branch": null,
+          "revision": "a58b9425ad4acb0875e6b7c3bee5aff578d49e4c",
+          "version": "1.0.1"
+        }
+      },
+      {
+        "package": "Utilities",
+        "repositoryURL": "https://github.com/Peter-Schorn/Swift_Utilities.git",
+        "state": {
+          "branch": null,
+          "revision": "d48465612d18974745f86b769b4cd71e6bd81817",
+          "version": "2.1.15"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

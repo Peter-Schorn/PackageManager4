@@ -51,6 +51,14 @@ struct GeneralSheet: View {
     
     
     func pasteFromClipboard() {
+        
+        if !isPresented {
+            print("General Sheet tried to paste but not showing")
+            return
+        }
+        
+        print("General Sheet: pasteFromClipboard")
+        
         if let pastedText = pasteboardString() {
             textField = pastedText
         }
